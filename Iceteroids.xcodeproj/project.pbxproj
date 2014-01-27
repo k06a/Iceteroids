@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		25390DF118963C6E003EFF26 /* CSTouchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 25390DF018963C6E003EFF26 /* CSTouchView.m */; };
 		25B0A34D18962BA6007070C7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0A34C18962BA6007070C7 /* Foundation.framework */; };
 		25B0A34F18962BA6007070C7 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0A34E18962BA6007070C7 /* CoreGraphics.framework */; };
 		25B0A35118962BA6007070C7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0A35018962BA6007070C7 /* UIKit.framework */; };
@@ -16,8 +17,6 @@
 		25B0A35D18962BA6007070C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B0A35C18962BA6007070C7 /* main.m */; };
 		25B0A36118962BA6007070C7 /* CSAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B0A36018962BA6007070C7 /* CSAppDelegate.m */; };
 		25B0A36418962BA6007070C7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 25B0A36218962BA6007070C7 /* Main.storyboard */; };
-		25B0A36618962BA6007070C7 /* Shader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 25B0A36518962BA6007070C7 /* Shader.fsh */; };
-		25B0A36818962BA6007070C7 /* Shader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 25B0A36718962BA6007070C7 /* Shader.vsh */; };
 		25B0A36B18962BA6007070C7 /* CSViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B0A36A18962BA6007070C7 /* CSViewController.m */; };
 		25B0A36D18962BA6007070C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 25B0A36C18962BA6007070C7 /* Images.xcassets */; };
 		25B0A37418962BA6007070C7 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0A37318962BA6007070C7 /* XCTest.framework */; };
@@ -25,6 +24,8 @@
 		25B0A37618962BA6007070C7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 25B0A35018962BA6007070C7 /* UIKit.framework */; };
 		25B0A37E18962BA6007070C7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 25B0A37C18962BA6007070C7 /* InfoPlist.strings */; };
 		25B0A38018962BA6007070C7 /* IceteroidsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B0A37F18962BA6007070C7 /* IceteroidsTests.m */; };
+		25B0A38B18962CC6007070C7 /* CSGameSprite.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B0A38A18962CC6007070C7 /* CSGameSprite.m */; };
+		25B0A38E18962EA9007070C7 /* spaceship@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25B0A38D18962EA9007070C7 /* spaceship@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +39,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		25390DEF18963C6E003EFF26 /* CSTouchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSTouchView.h; sourceTree = "<group>"; };
+		25390DF018963C6E003EFF26 /* CSTouchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSTouchView.m; sourceTree = "<group>"; };
 		25B0A34918962BA6007070C7 /* Iceteroids.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Iceteroids.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		25B0A34C18962BA6007070C7 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		25B0A34E18962BA6007070C7 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -51,8 +54,6 @@
 		25B0A35F18962BA6007070C7 /* CSAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CSAppDelegate.h; sourceTree = "<group>"; };
 		25B0A36018962BA6007070C7 /* CSAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CSAppDelegate.m; sourceTree = "<group>"; };
 		25B0A36318962BA6007070C7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		25B0A36518962BA6007070C7 /* Shader.fsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = Shader.fsh; path = Shaders/Shader.fsh; sourceTree = "<group>"; };
-		25B0A36718962BA6007070C7 /* Shader.vsh */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; name = Shader.vsh; path = Shaders/Shader.vsh; sourceTree = "<group>"; };
 		25B0A36918962BA6007070C7 /* CSViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CSViewController.h; sourceTree = "<group>"; };
 		25B0A36A18962BA6007070C7 /* CSViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CSViewController.m; sourceTree = "<group>"; };
 		25B0A36C18962BA6007070C7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -61,6 +62,9 @@
 		25B0A37B18962BA6007070C7 /* IceteroidsTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "IceteroidsTests-Info.plist"; sourceTree = "<group>"; };
 		25B0A37D18962BA6007070C7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		25B0A37F18962BA6007070C7 /* IceteroidsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IceteroidsTests.m; sourceTree = "<group>"; };
+		25B0A38918962CC6007070C7 /* CSGameSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSGameSprite.h; sourceTree = "<group>"; };
+		25B0A38A18962CC6007070C7 /* CSGameSprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSGameSprite.m; sourceTree = "<group>"; };
+		25B0A38D18962EA9007070C7 /* spaceship@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "spaceship@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,11 +131,14 @@
 				25B0A35F18962BA6007070C7 /* CSAppDelegate.h */,
 				25B0A36018962BA6007070C7 /* CSAppDelegate.m */,
 				25B0A36218962BA6007070C7 /* Main.storyboard */,
-				25B0A36518962BA6007070C7 /* Shader.fsh */,
-				25B0A36718962BA6007070C7 /* Shader.vsh */,
+				25390DEF18963C6E003EFF26 /* CSTouchView.h */,
+				25390DF018963C6E003EFF26 /* CSTouchView.m */,
+				25B0A38918962CC6007070C7 /* CSGameSprite.h */,
+				25B0A38A18962CC6007070C7 /* CSGameSprite.m */,
 				25B0A36918962BA6007070C7 /* CSViewController.h */,
 				25B0A36A18962BA6007070C7 /* CSViewController.m */,
 				25B0A36C18962BA6007070C7 /* Images.xcassets */,
+				25B0A38C18962EA0007070C7 /* Images */,
 				25B0A35718962BA6007070C7 /* Supporting Files */,
 			);
 			path = Iceteroids;
@@ -164,6 +171,14 @@
 				25B0A37C18962BA6007070C7 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		25B0A38C18962EA0007070C7 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				25B0A38D18962EA9007070C7 /* spaceship@2x.png */,
+			);
+			name = Images;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -214,6 +229,9 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Codeless Solutions";
 				TargetAttributes = {
+					25B0A34818962BA6007070C7 = {
+						DevelopmentTeam = U9FF7SJK5F;
+					};
 					25B0A37118962BA6007070C7 = {
 						TestTargetID = 25B0A34818962BA6007070C7;
 					};
@@ -243,9 +261,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				25B0A36818962BA6007070C7 /* Shader.vsh in Resources */,
 				25B0A36D18962BA6007070C7 /* Images.xcassets in Resources */,
-				25B0A36618962BA6007070C7 /* Shader.fsh in Resources */,
+				25B0A38E18962EA9007070C7 /* spaceship@2x.png in Resources */,
 				25B0A35B18962BA6007070C7 /* InfoPlist.strings in Resources */,
 				25B0A36418962BA6007070C7 /* Main.storyboard in Resources */,
 			);
@@ -266,8 +283,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				25B0A38B18962CC6007070C7 /* CSGameSprite.m in Sources */,
 				25B0A36118962BA6007070C7 /* CSAppDelegate.m in Sources */,
 				25B0A35D18962BA6007070C7 /* main.m in Sources */,
+				25390DF118963C6E003EFF26 /* CSTouchView.m in Sources */,
 				25B0A36B18962BA6007070C7 /* CSViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -351,7 +370,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
@@ -385,7 +404,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 2;
 				VALIDATE_PRODUCT = YES;
@@ -397,10 +416,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Iceteroids/Iceteroids-Prefix.pch";
 				INFOPLIST_FILE = "Iceteroids/Iceteroids-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "7B45660C-D394-4D21-A126-8373D161CAAA";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -410,10 +432,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Iceteroids/Iceteroids-Prefix.pch";
 				INFOPLIST_FILE = "Iceteroids/Iceteroids-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "7B45660C-D394-4D21-A126-8373D161CAAA";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -479,6 +504,7 @@
 				25B0A38518962BA6007070C7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		25B0A38618962BA6007070C7 /* Build configuration list for PBXNativeTarget "IceteroidsTests" */ = {
 			isa = XCConfigurationList;
@@ -487,6 +513,7 @@
 				25B0A38818962BA6007070C7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
