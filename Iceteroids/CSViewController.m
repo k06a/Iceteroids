@@ -28,7 +28,7 @@
     {
         _spaceship = [[CSGameSprite alloc] initWithImage:[UIImage imageNamed:@"spaceship"] effect:self.effect];
         _spaceship.position = GLKVector2Make(self.view.bounds.size.width/2, self.view.bounds.size.height/2);
-        _spaceship.deceleration = 0.95;
+        _spaceship.deceleration = 0.3;
     }
     return _spaceship;
 }
@@ -71,7 +71,7 @@
     dispatch_once(&onceToken, ^{
         GLKMatrix4 projectionMatrix = GLKMatrix4MakeOrtho(0, self.view.bounds.size.width, 0, self.view.bounds.size.height, -1024, 1024);
         self.effect.transform.projectionMatrix = projectionMatrix;
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 3; i++)
             [self.asteroids addObject:[self generateAsteroid]];
     });
 }
@@ -157,43 +157,42 @@ double sqr(double a)
     return a*a;
 }
 
-void kick(double m1, double m2, double u1, double u2, double *v1, double *v2)
+void centralKick(double m1, double m2, double u1, double u2, double *v1, double *v2)
 {
-    /*
-    double imp = m1*u1 + m2*u2;
-    double pow = m1*u1*u1 + m2*u2*u2;
-    double a = m2*(m2+1);
-    double b = 2*imp*m2/m1;
-    double c = imp*imp/m1 - pow;
-    double sqrt_d = sqrt(b*b - 4*a*c);
-    double x1 = (- b - sqrt_d)/(2*a);
-    double x2 = (- b + sqrt_d)/(2*a);
-    double y1 = (imp - m2*x1)/m1;
-    double y2 = (imp - m2*x2)/m1;
-    
-    NSLog(@"%f %f %f %f", x1, x2, y1, y2);
-    */
-    
     *v1 = (2*m2*u2 + (m2 - m1)*u1)/(m1 + m2);
     *v2 = (2*m1*u1 + (m1 - m2)*u2)/(m1 + m2);
 }
 
-
-- (void)doLeft {
-    self.spaceship.rotAcceleration = 2;
-}
-- (void)doRight {
-    self.spaceship.rotAcceleration = -2;
-}
-- (void)doForward {
-    self.spaceship.acceleration = GLKVector2Make(100*cos(self.spaceship.angle+M_PI_2),
-                                                 100*sin(self.spaceship.angle+M_PI_2));
-}
-- (void)doNotRotate {
-    self.spaceship.rotAcceleration = 0;
-}
-- (void)doNotAccelerate {
-    self.spaceship.acceleration = GLKVector2Make(0,0);
+void notCentralKick(double x1, double y1, double m1, double u1x, double u1y,
+                    double x2, double y2, double m2, double u2x, double u2y,
+                    double *v1x, double *v1y,
+                    double *v2x, double *v2y)
+{
+    double angle = atan2(y2-y1,x2-x1);
+    double sprite1Speed = sqrt(sqr(u1x) + sqr(u1y));
+    double sprite2Speed = sqrt(sqr(u2x) + sqr(u2y));
+    double sprite1Angle = atan2(u1y,u1x);
+    double sprite2Angle = atan2(u2y,u2x);
+    
+    double alpha = sprite1Angle - angle;
+    double beta = sprite2Angle - angle;
+    double sprite1SpeedX = sprite1Speed*cos(alpha);
+    double sprite2SpeedX = sprite2Speed*cos(beta);
+    double sprite1SpeedY = sprite1Speed*sin(alpha);
+    double sprite2SpeedY = sprite2Speed*sin(beta);
+    
+    double vx1, vx2;
+    centralKick(m1, m2, sprite1SpeedX, sprite2SpeedX, &vx1, &vx2);
+    
+    double newSpeed1 = sqrt(sqr(sprite1SpeedY) + sqr(vx1));
+    double newSpeed2 = sqrt(sqr(sprite2SpeedY) + sqr(vx2));
+    double newAplha = atan2(sprite1SpeedY,vx1);
+    double newBeta = atan2(sprite2SpeedY,vx2);
+    
+    *v1x = newSpeed1*cos(newAplha + angle);
+    *v1y = newSpeed1*sin(newAplha + angle);
+    *v2x = newSpeed2*cos(newBeta + angle);
+    *v2y = newSpeed2*sin(newBeta + angle);
 }
 
 - (void)update
@@ -251,44 +250,19 @@ void kick(double m1, double m2, double u1, double u2, double *v1, double *v2)
                                      - sprite2.position.y - sprite2.velocity.y*dt));
             
             if (dist < (sprite1.radius + sprite2.radius)
-                && dist2 < (sprite1.radius + sprite2.radius))
+                && dist2 < dist)
             {
-                //NSLog(@"KICK!");
-                double angle = atan2(sprite2.position.y-sprite1.position.y,
-                                     sprite2.position.x-sprite1.position.x);
-                double sprite1Speed = sqrt(sqr(sprite1.velocity.x) + sqr(sprite1.velocity.y));
-                double sprite2Speed = sqrt(sqr(sprite2.velocity.x) + sqr(sprite2.velocity.y));
-                double sprite1Angle = atan2(sprite1.velocity.y, sprite1.velocity.x);
-                double sprite2Angle = atan2(sprite2.velocity.y, sprite2.velocity.x);
+                [sprite1 update:-dt];
+                [sprite2 update:-dt];
                 
-                double alpha = sprite1Angle - angle;
-                double beta = sprite2Angle - angle;
-                double sprite1SpeedX = sprite1Speed*cos(alpha);
-                double sprite2SpeedX = sprite2Speed*cos(beta);
-                double sprite1SpeedY = sprite1Speed*sin(alpha);
-                double sprite2SpeedY = sprite2Speed*sin(beta);
+                double v1x, v1y;
+                double v2x, v2y;
+                notCentralKick(sprite1.position.x, sprite1.position.y, sprite1.radius*sprite1.radius, sprite1.velocity.x, sprite1.velocity.y,
+                               sprite2.position.x, sprite2.position.y, sprite2.radius*sprite2.radius, sprite2.velocity.x, sprite2.velocity.y,
+                               &v1x, &v1y, &v2x, &v2y);
                 
-                double vx1, vx2;
-                kick(sprite1.radius*sprite1.radius,
-                     sprite2.radius*sprite2.radius,
-                     sprite1SpeedX,
-                     sprite2SpeedX,
-                     &vx1, &vx2);
-                //NSLog(@"%f %f", vx1, vx2);
-                
-                double newSpeed1 = sqrt(sqr(sprite1SpeedY) + sqr(vx1));
-                double newSpeed2 = sqrt(sqr(sprite2SpeedY) + sqr(vx2));
-                double newAplha = atan2(sprite1SpeedY,vx1);
-                double newBeta = atan2(sprite2SpeedY,vx2);
-                
-                GLKVector2 v1 = GLKVector2Make(newSpeed1*cos(newAplha + angle),
-                                               newSpeed1*sin(newAplha + angle));
-                GLKVector2 v2 = GLKVector2Make(newSpeed2*cos(newBeta + angle),
-                                               newSpeed2*sin(newBeta + angle));
-                sprite1.velocity = v1;
-                sprite2.velocity = v2;
-                //[sprite1 update:dt];
-                //[sprite2 update:dt];
+                sprite1.velocity = GLKVector2Make(v1x, v1y);
+                sprite2.velocity = GLKVector2Make(v2x, v2y);
             }
         }
     }
