@@ -14,6 +14,7 @@
 @property (strong, nonatomic) EAGLContext *context;
 @property (strong, nonatomic) GLKBaseEffect *effect;
 @property (strong, nonatomic) CSGameSprite *spaceship;
+@property (strong, nonatomic) NSMutableArray *asteroids;
 
 - (void)setupGL;
 - (void)tearDownGL;
@@ -30,6 +31,13 @@
         _spaceship.deceleration = 0.95;
     }
     return _spaceship;
+}
+
+- (NSMutableArray *)asteroids
+{
+    if (_asteroids == nil)
+        _asteroids = [NSMutableArray array];
+    return _asteroids;
 }
 
 - (void)doLeft
@@ -58,18 +66,36 @@
     self.spaceship.acceleration = GLKVector2Make(0,0);
 }
 
+- (CSGameSprite *)generateAsteroid
+{
+    CSGameSprite *asteroid = [[CSGameSprite alloc] initWithImage:[UIImage imageNamed:@"blue_ball"] effect:self.effect];
+    asteroid.deceleration = 0;
+    asteroid.scale = 1.0 + (rand()%100)/50.0;
+    
+    NSInteger w = self.view.bounds.size.width;
+    NSInteger h = self.view.bounds.size.height;
+    asteroid.position = GLKVector2Make((rand()%200-100+w)%w, (rand()%200-100+h)%h);
+    asteroid.velocity = GLKVector2Make(rand()%200-100, rand()%200-100);
+    
+    return asteroid;
+}
+
 - (void)viewDidLayoutSubviews
 {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         GLKMatrix4 projectionMatrix = GLKMatrix4MakeOrtho(0, self.view.bounds.size.width, 0, self.view.bounds.size.height, -1024, 1024);
         self.effect.transform.projectionMatrix = projectionMatrix;
+        for (int i = 0; i < 10; i++)
+            [self.asteroids addObject:[self generateAsteroid]];
     });
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    srand(time(NULL));
     
     self.context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
     
@@ -96,6 +122,9 @@
     glEnable(GL_BLEND);
     
     [self.spaceship render];
+    for (CSGameSprite *asteroid in self.asteroids) {
+        [asteroid render];
+    }
 }
 
 - (void)dealloc
@@ -139,9 +168,59 @@
 
 #pragma mark - GLKView and GLKViewController delegate methods
 
+void kick(double m1, double m2, double u1, double u2, double *v1, double *v2)
+{
+    double imp = m1*u1 + m2*u2;
+    double pow = m1*u1*u1 + m2*u2*u2;
+    double a = m2*(m2+1);
+    double b = 2*imp*m2/m1;
+    double c = imp*imp/m1 - pow;
+    double sqrt_d = sqrt(b*b - 4*a*c);
+    double x1 = (- b - sqrt_d)/(2*a);
+    double x2 = (- b + sqrt_d)/(2*a);
+    double y1 = (imp - m2*x1)/m1;
+    double y2 = (imp - m2*x2)/m1;
+    
+    NSLog(@"%f %f %f %f", x1, x2, y1, y2);
+}
+
 - (void)update
 {
-    [self.spaceship update:self.timeSinceLastUpdate];
+    CGFloat dt = self.timeSinceLastUpdate;
+    
+    [self.spaceship update:dt];
+    for (CSGameSprite *asteroid in self.asteroids)
+        [asteroid update:dt];
+    
+    NSInteger w = self.view.bounds.size.width;
+    NSInteger h = self.view.bounds.size.height;
+    for (CSGameSprite *sprite in [self.asteroids arrayByAddingObject:self.spaceship])
+    {
+        if (sprite.position.x < -100 || sprite.position.x > w+100)
+            sprite.position = GLKVector2Make(w-sprite.position.x, sprite.position.y);
+        if (sprite.position.y < -100 || sprite.position.y > h+100)
+            sprite.position = GLKVector2Make(sprite.position.x, h-sprite.position.y);
+    }
+    
+    for (CSGameSprite *sprite1 in self.asteroids) {
+        for (CSGameSprite *sprite2 in self.asteroids) {
+            if (sprite1 == sprite2)
+                continue;
+            
+            CGFloat dist = (sprite1.position.x - sprite2.position.x)
+                            *(sprite1.position.x - sprite2.position.x)
+                         + (sprite1.position.y - sprite2.position.y)
+                            *(sprite1.position.y - sprite2.position.y);
+            
+            if (dist + 0.05 < sprite1.radius + sprite2.radius)
+            {
+                double vx1, vx2;
+                kick(1, 1, sprite1.velocity.x, sprite2.velocity.x, &vx1, &vx2);
+                double vy1, vy2;
+                kick(1, 1, sprite1.velocity.y, sprite2.velocity.y, &vy1, &vy2);
+            }
+        }
+    }
 }
 
 @end

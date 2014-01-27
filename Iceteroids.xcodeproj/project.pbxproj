@@ -26,6 +26,10 @@
 		25B0A38018962BA6007070C7 /* IceteroidsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B0A37F18962BA6007070C7 /* IceteroidsTests.m */; };
 		25B0A38B18962CC6007070C7 /* CSGameSprite.m in Sources */ = {isa = PBXBuildFile; fileRef = 25B0A38A18962CC6007070C7 /* CSGameSprite.m */; };
 		25B0A38E18962EA9007070C7 /* spaceship@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25B0A38D18962EA9007070C7 /* spaceship@2x.png */; };
+		25C3AD23189667C600E0C41F /* white_ball@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25C3AD1F189667C600E0C41F /* white_ball@2x.png */; };
+		25C3AD24189667C600E0C41F /* black_ball@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25C3AD20189667C600E0C41F /* black_ball@2x.png */; };
+		25C3AD25189667C600E0C41F /* red_ball@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25C3AD21189667C600E0C41F /* red_ball@2x.png */; };
+		25C3AD26189667C600E0C41F /* blue_ball@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 25C3AD22189667C600E0C41F /* blue_ball@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +69,10 @@
 		25B0A38918962CC6007070C7 /* CSGameSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSGameSprite.h; sourceTree = "<group>"; };
 		25B0A38A18962CC6007070C7 /* CSGameSprite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CSGameSprite.m; sourceTree = "<group>"; };
 		25B0A38D18962EA9007070C7 /* spaceship@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "spaceship@2x.png"; sourceTree = "<group>"; };
+		25C3AD1F189667C600E0C41F /* white_ball@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "white_ball@2x.png"; sourceTree = "<group>"; };
+		25C3AD20189667C600E0C41F /* black_ball@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "black_ball@2x.png"; sourceTree = "<group>"; };
+		25C3AD21189667C600E0C41F /* red_ball@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "red_ball@2x.png"; sourceTree = "<group>"; };
+		25C3AD22189667C600E0C41F /* blue_ball@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blue_ball@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -176,6 +184,10 @@
 		25B0A38C18962EA0007070C7 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				25C3AD1F189667C600E0C41F /* white_ball@2x.png */,
+				25C3AD20189667C600E0C41F /* black_ball@2x.png */,
+				25C3AD21189667C600E0C41F /* red_ball@2x.png */,
+				25C3AD22189667C600E0C41F /* blue_ball@2x.png */,
 				25B0A38D18962EA9007070C7 /* spaceship@2x.png */,
 			);
 			name = Images;
@@ -263,8 +275,12 @@
 			files = (
 				25B0A36D18962BA6007070C7 /* Images.xcassets in Resources */,
 				25B0A38E18962EA9007070C7 /* spaceship@2x.png in Resources */,
+				25C3AD23189667C600E0C41F /* white_ball@2x.png in Resources */,
+				25C3AD24189667C600E0C41F /* black_ball@2x.png in Resources */,
+				25C3AD25189667C600E0C41F /* red_ball@2x.png in Resources */,
 				25B0A35B18962BA6007070C7 /* InfoPlist.strings in Resources */,
 				25B0A36418962BA6007070C7 /* Main.storyboard in Resources */,
+				25C3AD26189667C600E0C41F /* blue_ball@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

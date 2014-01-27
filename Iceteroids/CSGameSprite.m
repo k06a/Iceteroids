@@ -20,6 +20,13 @@
 
 @implementation CSGameSprite
 
+- (CGFloat)scale
+{
+    if (_scale == 0.0)
+        _scale = 1.0;
+    return _scale;
+}
+
 - (void)update:(float)dt
 {
     self.velocity = GLKVector2Add(self.velocity, GLKVector2MultiplyScalar(self.acceleration, dt));
@@ -29,8 +36,6 @@
     self.rotVelocity += self.rotAcceleration*dt;
     self.rotVelocity -= self.rotVelocity*self.deceleration*dt;
     self.angle += self.rotVelocity * dt;
-    
-    //[self render];
 }
 
 - (CGRect)boundingRect
@@ -39,6 +44,11 @@
     GLKMatrix4 modelMatrix = [self modelMatrix];
     CGAffineTransform transform = CGAffineTransformMake(modelMatrix.m00, modelMatrix.m01, modelMatrix.m10, modelMatrix.m11, modelMatrix.m30, modelMatrix.m31);
     return CGRectApplyAffineTransform(rect, transform);
+}
+
+- (CGFloat)radius
+{
+    return self.contentSize.width/2*self.scale;
 }
 
 - (id)initWithTexture:(GLKTextureInfo *)textureInfo effect:(GLKBaseEffect *)effect
@@ -95,6 +105,8 @@
     modelMatrix = GLKMatrix4Translate(modelMatrix, self.position.x, self.position.y, 0);
     modelMatrix = GLKMatrix4Rotate(modelMatrix, self.angle, 0, 0, 1);
     modelMatrix = GLKMatrix4Translate(modelMatrix, -self.contentSize.width / 2, -self.contentSize.height / 2, 0);
+    modelMatrix = GLKMatrix4Scale(modelMatrix, self.scale, self.scale, 0);
+    
     return modelMatrix;
 }
 

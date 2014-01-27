@@ -32,8 +32,10 @@ typedef struct
 - (CGRect)boundingRect;
 
 @property (assign, nonatomic) CGSize contentSize;
+@property (assign, nonatomic) CGFloat scale;
+@property (assign, nonatomic, readonly) CGFloat radius;
 
-@property (assign, nonatomic) CGFloat deceleration; // like 0.8-0.9
+@property (assign, nonatomic) CGFloat deceleration;
 
 @property (assign, nonatomic) GLKVector2 position;
 @property (assign, nonatomic) GLKVector2 velocity;
@@ -42,5 +44,7 @@ typedef struct
 @property (assign, nonatomic) CGFloat angle;
 @property (assign, nonatomic) CGFloat rotVelocity;
 @property (assign, nonatomic) CGFloat rotAcceleration;
+
+- (GLKMatrix4)modelMatrix;
 
 @end
