@@ -8,14 +8,8 @@
 
 #import <GLKit/GLKit.h>
 
-@protocol CSTouchViewDelegate <NSObject>
-- (void)doRight;
-- (void)doLeft;
-- (void)doForward;
-- (void)doNotRotate;
-- (void)doNotAccelerate;
-@end
-
 @interface CSTouchView : GLKView
-@property (weak, nonatomic) id<CSTouchViewDelegate> doDelegate;
+@property (assign, nonatomic) BOOL touchingLeft;
+@property (assign, nonatomic) BOOL touchingRight;
+@property (assign, nonatomic) BOOL touchingForward;
 @end

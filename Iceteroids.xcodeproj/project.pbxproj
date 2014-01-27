@@ -200,6 +200,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 25B0A38318962BA6007070C7 /* Build configuration list for PBXNativeTarget "Iceteroids" */;
 			buildPhases = (
+				25A15F241896D07300CD6FCE /* Run Script Build Number Increment */,
 				25B0A34518962BA6007070C7 /* Sources */,
 				25B0A34618962BA6007070C7 /* Frameworks */,
 				25B0A34718962BA6007070C7 /* Resources */,
@@ -293,6 +294,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		25A15F241896D07300CD6FCE /* Run Script Build Number Increment */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run Script Build Number Increment";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/bash\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"$INFOPLIST_FILE\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"$INFOPLIST_FILE\"";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		25B0A34518962BA6007070C7 /* Sources */ = {

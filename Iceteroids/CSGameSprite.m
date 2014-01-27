@@ -51,6 +51,12 @@
     return self.contentSize.width/2*self.scale;
 }
 
+- (CGPoint)center
+{
+    return CGPointMake(self.position.x + self.boundingRect.size.width/2,
+                       self.position.y + self.boundingRect.size.height/2);
+}
+
 - (id)initWithTexture:(GLKTextureInfo *)textureInfo effect:(GLKBaseEffect *)effect
 {
     if ((self = [super init]))
@@ -101,13 +107,12 @@
 
 - (GLKMatrix4)modelMatrix
 {
-    GLKMatrix4 modelMatrix = GLKMatrix4Identity;
-    modelMatrix = GLKMatrix4Translate(modelMatrix, self.position.x, self.position.y, 0);
-    modelMatrix = GLKMatrix4Rotate(modelMatrix, self.angle, 0, 0, 1);
-    modelMatrix = GLKMatrix4Translate(modelMatrix, -self.contentSize.width / 2, -self.contentSize.height / 2, 0);
-    modelMatrix = GLKMatrix4Scale(modelMatrix, self.scale, self.scale, 0);
-    
-    return modelMatrix;
+    GLKMatrix4 matrix = GLKMatrix4Identity;
+    matrix = GLKMatrix4Translate(matrix, self.position.x, self.position.y, 0);
+    matrix = GLKMatrix4Rotate(matrix, self.angle, 0, 0, 1);
+    matrix = GLKMatrix4Scale(matrix, self.scale, self.scale, 0);
+    matrix = GLKMatrix4Translate(matrix, -self.contentSize.width/2, -self.contentSize.height/2, 0);
+    return matrix;
 }
 
 #undef offsetof

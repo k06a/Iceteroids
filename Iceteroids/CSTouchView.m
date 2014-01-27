@@ -8,12 +8,6 @@
 
 #import "CSTouchView.h"
 
-@interface CSTouchView ()
-@property (assign, nonatomic) BOOL wasLeft;
-@property (assign, nonatomic) BOOL wasRight;
-@property (assign, nonatomic) BOOL wasForward;
-@end
-
 @implementation CSTouchView
 
 - (void)do:(NSSet *)touches
@@ -32,33 +26,9 @@
             touchForward = YES;
     }
 
-    BOOL needLeft = touchLeft && !touchRight;
-    BOOL needRight = touchRight && !touchLeft;
-    BOOL needForward = touchForward || (touchLeft && touchRight);
-    
-    if (needForward && !touchForward)
-    {
-        needLeft = NO;
-        needRight = NO;
-    }
-    
-    if (!needLeft && self.wasLeft)
-        [self.doDelegate doNotRotate];
-    if (!needRight && self.wasRight)
-        [self.doDelegate doNotRotate];
-    if (!needForward && self.wasForward)
-        [self.doDelegate doNotAccelerate];
-    
-    if (needLeft && !self.wasLeft)
-        [self.doDelegate doLeft];
-    if (needRight && !self.wasRight)
-        [self.doDelegate doRight];
-    if (needForward && (!self.wasForward || needLeft || needRight))
-        [self.doDelegate doForward];
-    
-    self.wasLeft = needLeft;
-    self.wasRight = needRight;
-    self.wasForward = needForward;
+    self.touchingLeft = touchLeft;
+    self.touchingRight = touchRight;
+    self.touchingForward = touchForward;
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event

@@ -34,6 +34,8 @@ typedef struct
 @property (assign, nonatomic) CGSize contentSize;
 @property (assign, nonatomic) CGFloat scale;
 @property (assign, nonatomic, readonly) CGFloat radius;
+@property (assign, nonatomic, readonly) CGPoint center;
+
 
 @property (assign, nonatomic) CGFloat deceleration;
 

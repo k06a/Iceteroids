@@ -10,7 +10,7 @@
 #import "CSGameSprite.h"
 #import "CSTouchView.h"
 
-@interface CSViewController () <CSTouchViewDelegate>
+@interface CSViewController ()
 @property (strong, nonatomic) EAGLContext *context;
 @property (strong, nonatomic) GLKBaseEffect *effect;
 @property (strong, nonatomic) CSGameSprite *spaceship;
@@ -40,42 +40,27 @@
     return _asteroids;
 }
 
-- (void)doLeft
-{
-    self.spaceship.rotAcceleration = 2;
-}
-
-- (void)doRight
-{
-    self.spaceship.rotAcceleration = -2;
-}
-
-- (void)doForward
-{
-    self.spaceship.acceleration = GLKVector2Make(100*cos(self.spaceship.angle+M_PI_2),
-                                                 100*sin(self.spaceship.angle+M_PI_2));
-}
-
-- (void)doNotRotate
-{
-    self.spaceship.rotAcceleration = 0;
-}
-
-- (void)doNotAccelerate
-{
-    self.spaceship.acceleration = GLKVector2Make(0,0);
-}
-
 - (CSGameSprite *)generateAsteroid
 {
     CSGameSprite *asteroid = [[CSGameSprite alloc] initWithImage:[UIImage imageNamed:@"blue_ball"] effect:self.effect];
     asteroid.deceleration = 0;
-    asteroid.scale = 1.0 + (rand()%100)/50.0;
+    asteroid.scale = 1.0 + (rand()%140)/100.0;
     
+    NSInteger r = asteroid.boundingRect.size.width/2*asteroid.scale;
     NSInteger w = self.view.bounds.size.width;
     NSInteger h = self.view.bounds.size.height;
-    asteroid.position = GLKVector2Make((rand()%200-100+w)%w, (rand()%200-100+h)%h);
-    asteroid.velocity = GLKVector2Make(rand()%200-100, rand()%200-100);
+    while (YES)
+    {
+        asteroid.position = GLKVector2Make(rand()%(w-r*2)+r, rand()%(h-r*2)+r);
+        
+        BOOL flag = YES;
+        for (CSGameSprite *sprite in [self.asteroids arrayByAddingObject:self.spaceship])
+            if (CGRectIntersectsRect(sprite.boundingRect, asteroid.boundingRect))
+                flag = NO;
+        if (flag)
+            break;
+    }
+    asteroid.velocity = GLKVector2Make(rand()%400-200, rand()%400-200);
     
     return asteroid;
 }
@@ -86,7 +71,7 @@
     dispatch_once(&onceToken, ^{
         GLKMatrix4 projectionMatrix = GLKMatrix4MakeOrtho(0, self.view.bounds.size.width, 0, self.view.bounds.size.height, -1024, 1024);
         self.effect.transform.projectionMatrix = projectionMatrix;
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 5; i++)
             [self.asteroids addObject:[self generateAsteroid]];
     });
 }
@@ -107,7 +92,6 @@
     CSTouchView *view = (CSTouchView *)self.view;
     view.context = self.context;
     view.drawableDepthFormat = GLKViewDrawableDepthFormat24;
-    view.doDelegate = self;
     
     // initializing game state
     //self.gameRunning = NO;
@@ -168,8 +152,14 @@
 
 #pragma mark - GLKView and GLKViewController delegate methods
 
+double sqr(double a)
+{
+    return a*a;
+}
+
 void kick(double m1, double m2, double u1, double u2, double *v1, double *v2)
 {
+    /*
     double imp = m1*u1 + m2*u2;
     double pow = m1*u1*u1 + m2*u2*u2;
     double a = m2*(m2+1);
@@ -182,11 +172,46 @@ void kick(double m1, double m2, double u1, double u2, double *v1, double *v2)
     double y2 = (imp - m2*x2)/m1;
     
     NSLog(@"%f %f %f %f", x1, x2, y1, y2);
+    */
+    
+    *v1 = (2*m2*u2 + (m2 - m1)*u1)/(m1 + m2);
+    *v2 = (2*m1*u1 + (m1 - m2)*u2)/(m1 + m2);
+}
+
+
+- (void)doLeft {
+    self.spaceship.rotAcceleration = 2;
+}
+- (void)doRight {
+    self.spaceship.rotAcceleration = -2;
+}
+- (void)doForward {
+    self.spaceship.acceleration = GLKVector2Make(100*cos(self.spaceship.angle+M_PI_2),
+                                                 100*sin(self.spaceship.angle+M_PI_2));
+}
+- (void)doNotRotate {
+    self.spaceship.rotAcceleration = 0;
+}
+- (void)doNotAccelerate {
+    self.spaceship.acceleration = GLKVector2Make(0,0);
 }
 
 - (void)update
 {
     CGFloat dt = self.timeSinceLastUpdate;
+    
+    CSTouchView *view = (id)self.view;
+    if ((view.touchingLeft && view.touchingRight) || view.touchingForward)
+        self.spaceship.acceleration = GLKVector2Make(100*cos(self.spaceship.angle+M_PI_2), 100*sin(self.spaceship.angle+M_PI_2));
+    else
+        self.spaceship.acceleration = GLKVector2Make(0,0);
+    
+    if (view.touchingLeft && !view.touchingRight)
+        self.spaceship.rotAcceleration = 2;
+    else if (view.touchingRight && !view.touchingLeft)
+        self.spaceship.rotAcceleration = -2;
+    else
+        self.spaceship.rotAcceleration = 0;
     
     [self.spaceship update:dt];
     for (CSGameSprite *asteroid in self.asteroids)
@@ -196,28 +221,74 @@ void kick(double m1, double m2, double u1, double u2, double *v1, double *v2)
     NSInteger h = self.view.bounds.size.height;
     for (CSGameSprite *sprite in [self.asteroids arrayByAddingObject:self.spaceship])
     {
-        if (sprite.position.x < -100 || sprite.position.x > w+100)
-            sprite.position = GLKVector2Make(w-sprite.position.x, sprite.position.y);
-        if (sprite.position.y < -100 || sprite.position.y > h+100)
-            sprite.position = GLKVector2Make(sprite.position.x, h-sprite.position.y);
+        CGFloat r = sprite.radius;
+        if ((sprite.position.x <= r && sprite.velocity.x < 0)
+            || (sprite.position.x >= w-1-r && sprite.velocity.x > 0))
+        {
+            sprite.velocity = GLKVector2Make(-sprite.velocity.x, sprite.velocity.y);
+            sprite.acceleration = GLKVector2Make(-sprite.acceleration.x, sprite.acceleration.y);
+        }
+        if ((sprite.position.y <= r && sprite.velocity.y < 0)
+            || (sprite.position.y >= h-1-r && sprite.velocity.y > 0))
+        {
+            sprite.velocity = GLKVector2Make(sprite.velocity.x, -sprite.velocity.y);
+            sprite.acceleration = GLKVector2Make(sprite.acceleration.x, -sprite.acceleration.y);
+        }
     }
     
-    for (CSGameSprite *sprite1 in self.asteroids) {
-        for (CSGameSprite *sprite2 in self.asteroids) {
-            if (sprite1 == sprite2)
-                continue;
+    NSArray *asteroids = [self.asteroids arrayByAddingObject:self.spaceship];
+    
+    for (int i = 0; i < asteroids.count-1; i++) {
+        for (int j = i+1; j < asteroids.count; j++) {
+            CSGameSprite *sprite1 = asteroids[i];
+            CSGameSprite *sprite2 = asteroids[j];
             
-            CGFloat dist = (sprite1.position.x - sprite2.position.x)
-                            *(sprite1.position.x - sprite2.position.x)
-                         + (sprite1.position.y - sprite2.position.y)
-                            *(sprite1.position.y - sprite2.position.y);
+            CGFloat dist = sqrt(sqr(sprite1.position.x - sprite2.position.x)
+                              + sqr(sprite1.position.y - sprite2.position.y));
+            CGFloat dist2 = sqrt(sqr(sprite1.position.x + sprite1.velocity.x*dt
+                                     - sprite2.position.x - sprite2.velocity.x*dt)
+                               + sqr(sprite1.position.y + sprite1.velocity.y*dt
+                                     - sprite2.position.y - sprite2.velocity.y*dt));
             
-            if (dist + 0.05 < sprite1.radius + sprite2.radius)
+            if (dist < (sprite1.radius + sprite2.radius)
+                && dist2 < (sprite1.radius + sprite2.radius))
             {
+                //NSLog(@"KICK!");
+                double angle = atan2(sprite2.position.y-sprite1.position.y,
+                                     sprite2.position.x-sprite1.position.x);
+                double sprite1Speed = sqrt(sqr(sprite1.velocity.x) + sqr(sprite1.velocity.y));
+                double sprite2Speed = sqrt(sqr(sprite2.velocity.x) + sqr(sprite2.velocity.y));
+                double sprite1Angle = atan2(sprite1.velocity.y, sprite1.velocity.x);
+                double sprite2Angle = atan2(sprite2.velocity.y, sprite2.velocity.x);
+                
+                double alpha = sprite1Angle - angle;
+                double beta = sprite2Angle - angle;
+                double sprite1SpeedX = sprite1Speed*cos(alpha);
+                double sprite2SpeedX = sprite2Speed*cos(beta);
+                double sprite1SpeedY = sprite1Speed*sin(alpha);
+                double sprite2SpeedY = sprite2Speed*sin(beta);
+                
                 double vx1, vx2;
-                kick(1, 1, sprite1.velocity.x, sprite2.velocity.x, &vx1, &vx2);
-                double vy1, vy2;
-                kick(1, 1, sprite1.velocity.y, sprite2.velocity.y, &vy1, &vy2);
+                kick(sprite1.radius*sprite1.radius,
+                     sprite2.radius*sprite2.radius,
+                     sprite1SpeedX,
+                     sprite2SpeedX,
+                     &vx1, &vx2);
+                //NSLog(@"%f %f", vx1, vx2);
+                
+                double newSpeed1 = sqrt(sqr(sprite1SpeedY) + sqr(vx1));
+                double newSpeed2 = sqrt(sqr(sprite2SpeedY) + sqr(vx2));
+                double newAplha = atan2(sprite1SpeedY,vx1);
+                double newBeta = atan2(sprite2SpeedY,vx2);
+                
+                GLKVector2 v1 = GLKVector2Make(newSpeed1*cos(newAplha + angle),
+                                               newSpeed1*sin(newAplha + angle));
+                GLKVector2 v2 = GLKVector2Make(newSpeed2*cos(newBeta + angle),
+                                               newSpeed2*sin(newBeta + angle));
+                sprite1.velocity = v1;
+                sprite2.velocity = v2;
+                //[sprite1 update:dt];
+                //[sprite2 update:dt];
             }
         }
     }
