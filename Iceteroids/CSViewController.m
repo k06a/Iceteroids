@@ -34,12 +34,12 @@
 
 - (void)doLeft
 {
-    self.spaceship.rotAcceleration = -2;
+    self.spaceship.rotAcceleration = 2;
 }
 
 - (void)doRight
 {
-    self.spaceship.rotAcceleration = 2;
+    self.spaceship.rotAcceleration = -2;
 }
 
 - (void)doForward
@@ -48,10 +48,14 @@
                                                  100*sin(self.spaceship.angle+M_PI_2));
 }
 
-- (void)doNothing
+- (void)doNotRotate
+{
+    self.spaceship.rotAcceleration = 0;
+}
+
+- (void)doNotAccelerate
 {
     self.spaceship.acceleration = GLKVector2Make(0,0);
-    self.spaceship.rotAcceleration = 0;
 }
 
 - (void)viewDidLayoutSubviews

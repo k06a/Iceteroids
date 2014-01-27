@@ -12,7 +12,8 @@
 - (void)doRight;
 - (void)doLeft;
 - (void)doForward;
-- (void)doNothing;
+- (void)doNotRotate;
+- (void)doNotAccelerate;
 @end
 
 @interface CSTouchView : GLKView

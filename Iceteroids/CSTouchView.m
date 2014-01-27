@@ -18,37 +18,47 @@
 
 - (void)do:(NSSet *)touches
 {
-    CGFloat w = self.bounds.size.width/2;
-    BOOL haveLeft = NO;
-    BOOL haveRight = NO;
-    BOOL haveForward = NO;
+    CGFloat w = self.bounds.size.width;
+    BOOL touchLeft = NO;
+    BOOL touchRight = NO;
+    BOOL touchForward = NO;
     for (UITouch *touch in touches) {
         CGPoint point = [touch locationInView:self];
         if (point.x <= w/2-w/6)
-            haveRight = YES;
+            touchLeft = YES;
         if (point.x >= w/2+w/6)
-            haveLeft = YES;
+            touchRight = YES;
         if (w/2-w/6 < point.x && point.x < w/2+w/6)
-            haveForward = YES;
+            touchForward = YES;
     }
+
+    BOOL needLeft = touchLeft && !touchRight;
+    BOOL needRight = touchRight && !touchLeft;
+    BOOL needForward = touchForward || (touchLeft && touchRight);
     
-    if (haveLeft != self.wasLeft
-        || haveRight != self.wasRight
-        || haveForward != self.wasForward)
+    if (needForward && !touchForward)
     {
-        [self.doDelegate doNothing];
+        needLeft = NO;
+        needRight = NO;
     }
     
-    if (haveForward || (haveLeft && haveRight))
-        return [self.doDelegate doForward];
-    if (haveLeft)
-        return [self.doDelegate doLeft];
-    if (haveRight)
-        return [self.doDelegate doRight];
+    if (!needLeft && self.wasLeft)
+        [self.doDelegate doNotRotate];
+    if (!needRight && self.wasRight)
+        [self.doDelegate doNotRotate];
+    if (!needForward && self.wasForward)
+        [self.doDelegate doNotAccelerate];
     
-    self.wasLeft = haveLeft;
-    self.wasRight = haveRight;
-    self.wasForward = haveForward;
+    if (needLeft && !self.wasLeft)
+        [self.doDelegate doLeft];
+    if (needRight && !self.wasRight)
+        [self.doDelegate doRight];
+    if (needForward && (!self.wasForward || needLeft || needRight))
+        [self.doDelegate doForward];
+    
+    self.wasLeft = needLeft;
+    self.wasRight = needRight;
+    self.wasForward = needForward;
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
@@ -65,9 +75,9 @@
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    touches = [touches setByAddingObjectsFromSet:[event allTouches]];
-    [self do:touches];
-    [self.doDelegate doNothing];
+    NSMutableSet *set = [[event allTouches] mutableCopy];
+    [set minusSet:touches];
+    [self do:set];
 }
 
 @end

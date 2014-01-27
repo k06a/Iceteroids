@@ -30,7 +30,7 @@
     self.rotVelocity -= self.rotVelocity*self.deceleration*dt;
     self.angle += self.rotVelocity * dt;
     
-    [self render];
+    //[self render];
 }
 
 - (CGRect)boundingRect
